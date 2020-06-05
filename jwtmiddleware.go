@@ -51,6 +51,8 @@ type Options struct {
 	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
 	// Default: nil
 	SigningMethod jwt.SigningMethod
+
+	ParserOptions []jwt.ParserOption
 }
 
 type JWTMiddleware struct {
@@ -201,7 +203,7 @@ func (m *JWTMiddleware) CheckJWT(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Now parse the token
-	parsedToken, err := jwt.Parse(token, m.Options.ValidationKeyGetter)
+	parsedToken, err := jwt.Parse(token, m.Options.ValidationKeyGetter, m.Options.ParserOptions...)
 
 	// Check if there was an error in parsing...
 	if err != nil {
